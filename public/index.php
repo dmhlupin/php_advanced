@@ -39,10 +39,10 @@ $product = new Products("Часы", "Наручные", 150);
 $product->insert();
 var_dump($product);
 $product->delete();
-die();
+
+
+
 
 //$user = new Users();
 
-var_dump($product->getOne(1));
-var_dump($product->getAll());
 

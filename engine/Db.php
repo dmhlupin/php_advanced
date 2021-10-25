@@ -74,7 +74,7 @@ class Db
     public function queryOneObject($sql, $params = [], $class)
     {
         $stmt = $this->query($sql, $params);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, $class);
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $class); // ДЗ
         return $stmt->fetch();
     }
 
