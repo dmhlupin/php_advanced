@@ -78,9 +78,24 @@ abstract class Model implements IModel
     {
         $tableName = $this->getTableName();
         $id = $this->id;
-        $sql = "DELETE FROM `{$tableName}` WHERE `{$tableName}`.`id` = {$id}";
-        Db::getInstanse()->execute($sql);
+        $sql = "DELETE FROM `{$tableName}` WHERE `{$tableName}`.`id` = :id";
+        Db::getInstanse()->execute($sql, ['id' => $id]);
         return true;
+    }
+
+    public function update()
+    {
+        //UPDATE `products` SET `name` = 'Coffee', `description` = 'Колумбийский' WHERE `products`.`id` = 4;
+        foreach($this as $key => $value) {
+            $params[$key] = $value;
+            if($key == 'id') continue;           
+            $fields[] = "`{$key}` = :{$key}";       
+        }
+        $fieldStr = implode(',', $fields);  
+        $tableName = $this->getTableName();
+        $sql = "UPDATE `{$tableName}` SET {$fieldStr} WHERE `{$tableName}`.`id` = :id";
+        Db::getInstanse()->execute($sql, $params);
+        return $this;
     }
 
 }

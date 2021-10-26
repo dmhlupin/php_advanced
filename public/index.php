@@ -35,10 +35,17 @@ include "../engine/Autoload.php";
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 
-$product = new Products("Часы", "Наручные", 150);
+$product = new Products("Шарф", "Шерстяной", 30, 2, 1);
 $product->insert();
 var_dump($product);
-$product->delete();
+$product->description = "Длинный шерстяной";
+var_dump($product);
+$product->update();
+
+
+// $product->insert();
+// var_dump($product);
+// $product->delete();
 
 
 
