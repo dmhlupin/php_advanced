@@ -1,0 +1,153 @@
+body {
+    margin: 0 auto;
+    font-family: 'Montserrat', sans-serif;
+    background-color: rgb(240, 240, 240);
+}
+
+.wrapper {
+    width:1200px;
+    max-width:100%;
+    margin:0 auto;
+    background-color: #fff;
+    
+}
+
+a {
+    text-decoration: none;
+    display: inline-block;
+    color: inherit;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    background-color: #fff;
+}
+
+.header div {
+    margin: 0 50px;
+}
+
+.header .logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: darkgreen;
+    width: 50%;
+}
+
+.menuSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    background-color: #474747;
+}
+
+.menuBlock {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.menuBlock, .breadCrumpsBlock {
+    margin: 0 20px;
+}
+.breadCrumpsBlock {
+    margin-right: 50px;
+    color:rgb(211, 211, 211);
+    font-weight: 300;
+}
+
+.menuItem {
+    margin: 0 20px;
+    color:#fff;
+    text-decoration: none;
+    
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.catalogContainer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.catalogItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 31%;
+    height: 400px;
+    
+    
+    padding: 10px;
+}
+.catalogItem:hover {
+    outline: 1px solid rgb(195, 195, 195);
+}
+
+.catalogItem h3 a {
+    text-align: center;
+}
+
+.catalogImage {
+    max-width: 150px;
+    max-height: 200px;
+}
+.catalogMore {
+    display: flex;
+    margin: 20px 0;
+    width: 100px;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    color: black;
+    border: 1px solid lightgray;
+}
+.catalogMore:hover {
+    background-color: rgb(236, 236, 236);
+}
+
+.cardBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items:flex-start;
+    padding: 50px;
+}
+.cardDescBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: baseline;
+    width: 70%;
+    margin-right: 40px;
+}
+.cardImageBlock {
+    max-width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cardImage {
+    max-width: 300px;
+}
+
+.ordersContainer {
+    padding: 0 20px;
+}
+
+.ordersItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: lightgrey;
+    width: 100%;
+}
