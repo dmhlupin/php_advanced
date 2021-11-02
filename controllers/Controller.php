@@ -3,15 +3,16 @@
 namespace app\controllers;
 
 use app\engine\Render;
+use app\interfaces\IRenderer;
 
-Class Controller {
+abstract class Controller {
     private $action;
     private $defaultAction = 'index';
     private $layout = 'main';
     private $useLayout = true;
     private $render;
 
-    public function __construct($render)
+    public function __construct(IRenderer $render)
     {
         $this->render = $render;
     }
@@ -29,7 +30,7 @@ Class Controller {
         
     public function render($template, $params=[])
     {
-        if($this->layout){
+        if($this->useLayout){
             
             return $this->renderTemplate('layouts/'.$this->layout, [
                 'header' => $this->renderTemplate('header', $params),

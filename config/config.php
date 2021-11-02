@@ -4,3 +4,4 @@ define('ROOT', dirname(__DIR__));
 define('DS', DIRECTORY_SEPARATOR);
 define('CONTROLLER_NAMESPACE', 'app\\controllers\\');
 define('VIEWS_DIR', ROOT.'/views/');
+define('TEMPLATES_DIR', ROOT.'/templates/');

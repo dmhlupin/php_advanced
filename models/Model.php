@@ -30,4 +30,10 @@ abstract class Model implements IModel
         echo "Вызов неопределенного метода {$name} с параметрами: ".implode(', ', $arguments);
     }
 
+    public function __isset($name)
+    {
+        // ДЗ 5
+        return isset($this->name);
+    }
+
 }

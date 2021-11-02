@@ -1,0 +1,11 @@
+<h2>Корзина</h2>
+<div class="catalogContainer">
+    {% for item in basket %}
+        <div class="catalogItem">
+            <h3>{{ item.name }}</h3>
+            <img class="catalogImage" src="images/{{ item.image }}" alt="image">
+            <p>price: {{ item.price }}</p>
+            <button>Удалить</button>
+        </div>
+    {% endfor %}
+</div>
