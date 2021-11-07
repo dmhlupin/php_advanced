@@ -1,0 +1,17 @@
+<h2>Корзина</h2>
+<div class="catalogContainer">
+    {% for item in basket %}
+        <div class="catalogItem">
+            <h3>{{ item.name }}</h3>
+            <img class="catalogImage" src="images/{{ item.image }}" alt="image">
+            <p>price: {{ item.price }}</p>
+
+        <form action="/basket/delete/" method="POST">
+            <input type="text" name="id" value="{{ item.basket_id }}" hidden>
+            <button type="submit">Удалить</button>
+        </form>
+        </div>
+    {% else %}
+        В корзине нет товаров
+    {% endfor %}
+</div>
