@@ -1,0 +1,35 @@
+<h2>Корзина</h2>
+<div class="catalogContainer">
+    {% for item in basket %}
+        <div class="catalogItem" id="{{ item.basket_id }}">
+            <h3>{{ item.name }}</h3>
+            <img class="catalogImage" src="images/{{ item.image }}" alt="image">
+            <p>price: {{ item.price }}</p>
+
+            
+            
+            <button class="delete" data-id="{{ item.basket_id }}">Удалить</button>
+            
+        </div>
+    {% else %}
+        В корзине нет товаров
+    {% endfor %}
+</div>
+
+<script>
+    let buttons = document.querySelectorAll('.delete');
+    buttons.forEach((elem) => {
+        elem.addEventListener('click', () => {
+            let id = elem.getAttribute('data-id');
+            (
+                async () => {
+                    const response = await fetch('/basket/delete/?id=' + id);
+                    const answer = await response.json();
+                    document.getElementById(id).remove();
+                    document.getElementById('count').innerText = answer.count;
+                }
+            )();
+        })
+    })
+
+</script>
