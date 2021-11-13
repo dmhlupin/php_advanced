@@ -1,0 +1,120 @@
+<h2>Корзина</h2>
+<div class="catalogContainer">
+    {% for item in basket %}
+        <div class="catalogItem" id="{{ item.basket_id }}">
+            <h3>{{ item.name }}</h3>
+            <img class="catalogImage" src="images/{{ item.image }}" alt="image">
+            <p>price: {{ item.price }}</p>
+            <button class="addOrder" data-id="{{ item.basket_id }}">Оформить</button>
+            <button class="delete" data-id="{{ item.basket_id }}">Удалить</button>
+        </div>
+    {% else %}
+        В корзине нет товаров
+    {% endfor %}
+
+    {# Модальное окно #}
+    
+    <div id="my_modal" class="modal">
+        <div class="modal_block">
+            <span class="close_modal_window">×</span>
+            <p id="modal_title">Окно</p>
+            <div id="modal_content"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let deleteButtons = document.querySelectorAll('.delete');
+
+    let orderButtons = document.querySelectorAll('.addOrder');
+
+    let modal = document.getElementById("my_modal");
+    
+    let span = document.getElementsByClassName("close_modal_window")[0];
+    
+    let modal_title = document.getElementById("modal_title");
+    
+    let modal_content = document.getElementById("modal_content");
+
+    
+
+    deleteButtons.forEach((elem) => {
+        elem.addEventListener('click', () => {
+            let id = elem.getAttribute('data-id');
+            (
+                async () => {
+                    const response = await fetch('/basket/delete/?id=' + id);
+                    const answer = await response.json();
+                    document.getElementById(id).remove();
+                    document.getElementById('count').innerText = answer.count;
+                }
+            )();
+        });
+    });
+
+    orderButtons.forEach((elem) => {
+        elem.addEventListener('click', () => {
+            let id = elem.getAttribute('data-id');
+            (
+                async () => {
+                    const response = await fetch('/orders/addOrder/?id=' + id);
+                    const answer = await response.json();
+                    // Что дальше - куда выводить элемент? В модальное окно!
+                    modal.style.display = "block";
+                    if(answer.auth){
+                        modal_title.innerText = "Подтвердите заказ";
+                        modal_content.innerHTML = "<p>Ваш заказ: " + answer.orderName + "</p><p>Цена: "+ answer.price + "</p><p>Ваш телефон: </p>";
+                        const phoneInput = document.createElement('input');
+                        phoneInput.type = "text";
+                        phoneInput.id = "phoneId";
+                        phoneInput.value = "111-111-111";
+                        modal_content.appendChild(phoneInput);
+                        const acceptButton = document.createElement('button');
+                        acceptButton.id = 'acceptButton';
+                        acceptButton.setAttribute("data-id", answer.basketId);
+                        acceptButton.textContent = "Подтвердить заказ";
+                        modal_content.appendChild(acceptButton);
+                        acceptButton.addEventListener('click', () => {
+                            const id = acceptButton.getAttribute('data-id');
+                            const phone = phoneInput.value;
+                            (
+                                async() => {
+                                    const response = await fetch('/orders/acceptOrder/?id=' + id + '&phone=' + phone);
+                                    const answer = await response.json();
+                                
+                                    if(answer.accepted){
+                                        modal_title.innerHTML = "Заказ успешно добавлен. Его статус доступен на странице заказов: <a href=\"/orders/orders\">Заказы</a>";
+                                        document.getElementById(id).remove();
+                                        document.getElementById('count').innerText = answer.count;
+                                    } else {
+                                        modal_title.innerText = "Не удалось добавить заказ!";
+                                        
+                                    }
+                                    modal_content.style.display = "none";
+                                }
+                            )();
+                        });
+                        
+                        
+                    } else {
+                        modal_title.innerText = "Для оформления заказа необходимо зарегистрироваться!"
+                    }
+                }
+            )();
+        });
+    });
+
+    
+
+
+
+    span.addEventListener('click', () => {modal.style.display = "none"});
+    window.addEventListener('click', (event) => {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+
+
+
+</script>
