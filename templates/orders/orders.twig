@@ -1,14 +1,53 @@
 <h2>Заказы</h2>
 <div class="ordersContainer">
-    {% for item in orders %}
-        <div class="ordersItem">
-            <p>id: {{ item.id }}</p>
-            <p>Номер: {{ item.name }}</p>
-            <p>Телефон: {{ item.phone }}</p>
-            <p>Клиент: {{ item.user_id }}</p>
-            <p>Статус: {{ item.status }}</p>
-            <p>Сумма: {{ item.sum }}</p>
-            <p><a href="/orders/order/?id={{ item.id }}">Посмотреть</a></p>
-        </div>
+    <table>
+        <tr>
+            <th>Заказ</th>
+            <th>Наименование</th>
+            <th>Клиент</th>
+            <th>Телефон</th>
+            <th>Сумма</th>
+            <th>Статус</th>
+            <th>Подробно</th>
+            {% if isAdmin %}
+                <th>Подтвердить</th>
+                <th>Отменить</th>
+            {% endif %}
+            
+        </tr>
+        {% for item in orders %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.user_id }}</td>
+                <td>{{ item.phone }}</td>
+                <td>{{ item.sum }}</td>
+                <td id={{ item.id }}>{{ item.status }}</td>
+                <td><a href="/orders/order/?id={{ item.id }}">Посмотреть</a></td>
+                {% if isAdmin %}
+                    <td><button class="changeOrder" data-id="{{ item.id }}" change-type="confirm">Подтвердить</button></td>
+                    <td><button class="changeOrder" data-id="{{ item.id }}" change-type="cancel">Отменить</button></td>
+                {% endif %}
+            </tr>
     {% endfor %}
+    </table>
 </div>
+
+<script>
+    let changeButtons = document.querySelectorAll('.changeOrder');
+
+    changeButtons.forEach((elem) => {
+        elem.addEventListener('click', () => {
+            let id = elem.getAttribute('data-id');
+            let changeType = elem.getAttribute('change-type');
+            (
+                async () => {
+                    const response = await fetch('/orders/change/?id=' + id + '&changeType=' + changeType);
+                    const answer = await response.json();
+                    document.getElementById(id).innerText = answer.status;
+                }
+            )();
+        });
+    });
+
+</script>
