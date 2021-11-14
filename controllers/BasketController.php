@@ -2,44 +2,38 @@
 
 namespace app\controllers;
 
-use app\engine\Request;
+
 use app\models\entity\Basket;
-use app\models\entity\Products;
-use app\models\repositories\BasketRepository;
-use app\models\repositories\ProductRepository;
+use app\engine\App;
 
 class BasketController extends Controller 
 {
     public function actionIndex()
     {
-        $basketRepository = new BasketRepository();
         $session_id = session_id();
 
-        $basket = $basketRepository->getBasket($session_id);
+        $basket = App::call()->basketRepository->getBasket($session_id);
 
         echo $this->render('basket', [
             'basket' => $basket
         ]);
     }
     public function actionAdd() 
-    {
-        $request = new Request();
-        
-        $id=$request->getParams()['id'];
+    {        
+        $id=App::call()->request->getParams()['id'];
 
         //берем цену продукта из БД
-        $price = (new ProductRepository())->getOne($id)['price']; 
+        $price = App::call()->productRepository->getOne($id)['price']; 
         
-
         $session_id = session_id();
        
         $basket = new Basket($session_id, $id, $price);
         
-        (new BasketRepository())->save($basket);
+        App::call()->basketRepository->save($basket);
 
         $response = [
             'status' => 'ok',
-            'count' => (new BasketRepository())->getCountWhere('session_id', $session_id)
+            'count' => App::call()->basketRepository->getCountWhere('session_id', $session_id)
         ];
 
         echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -50,18 +44,18 @@ class BasketController extends Controller
     {
             // 01:15
         $session_id = session_id(); 
-        $request = new Request();
-        $id = $request->getParams()['id'];
         
-        $basket = (new BasketRepository())->getOneObject($id);// ПОЧЕМУ ЗДЕСЬ МАССИВ а не объект??? Потому что статические методы надо было убрать!!! 4 часа потратил!!!!
+        $id = App::call()->request->getParams()['id'];
+        
+        $basket = App::call()->basketRepository->getOneObject($id);// ПОЧЕМУ ЗДЕСЬ МАССИВ а не объект??? Потому что статические методы надо было убрать!!! 4 часа потратил!!!!
 
         if($session_id == $basket->session_id){
             
-            (new BasketRepository())->delete($basket);
+            App::call()->basketRepository->delete($basket);
         }
         $response = [
             'status' => 'ok',
-            'count' => (new BasketRepository())->getCountWhere('session_id', $session_id)
+            'count' => App::call()->basketRepository->getCountWhere('session_id', $session_id)
         ];
         echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         die();

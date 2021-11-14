@@ -2,22 +2,38 @@
 
 namespace app\engine;
 
-use app\models\entity\Basket;
-use app\traits\TSingletone;
 use PDO;
 
 class Db
 {
-    private $config = [
-        'driver' => 'mysql',
-        'host' => 'localhost:3307',
-        'login' => 'root',
-        'password' => '123456',
-        'database' => 'shop',
-        'charset' => 'utf8',
-    ];
+    private $config;
+    // = [
+    //     'driver' => 'mysql',
+    //     'host' => 'localhost:3307',
+    //     'login' => 'root',
+    //     'password' => '123456',
+    //     'database' => 'shop',
+    //     'charset' => 'utf8',
+    // ];
 
-    use TSingletone; // Трейт - внедряет код, описанный в спецклассе trait в код основного класса
+    public function __construct(
+        $driver = null,
+        $host = null,
+        $login = null,
+        $password = null,
+        $database = null,
+        $charset = "utf8"
+    )
+    {
+        $this->config['driver'] = $driver;
+        $this->config['host'] = $host;
+        $this->config['login'] = $login;
+        $this->config['password'] = $password;
+        $this->config['database'] = $database;
+        $this->config['charset'] = $charset;
+    }
+
+    //  use TSingletone; // Трейт - внедряет код, описанный в спецклассе trait в код основного класса
                      // это обычный php класс, в логику работы которого включена проверка на эксклюзивность его 
                      // создания. Т.е. объект класса, построенный по шаблону синглтона, может быть создан лишь 
                      // один раз. Все будущие попытки обратиться к его методу или свойству, создав новый объект, 

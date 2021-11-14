@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\engine\Db;
+use app\engine\App;
 
 
 // Класс содержит CRUD блок для работы с БД
@@ -18,12 +19,12 @@ abstract class Repository
     {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM `{$tableName}` WHERE id = :id"; //:id - плэйсхолдер для id в целях безопасности
-        return Db::getInstanse()->queryOne($sql, ['id' => $id]);
+        return App::call()->db->queryOne($sql, ['id' => $id]);
     }
     public function getId($name, $value){
         $tableName = $this->getTableName();
         $sql = "SELECT id FROM `{$tableName}` WHERE `{$name}` = :value";
-        $result = Db::getInstanse()->queryOne($sql, ['value' => $value]);
+        $result = App::call()->db->queryOne($sql, ['value' => $value]);
         return $result['id'];
     }
 
@@ -31,7 +32,7 @@ abstract class Repository
     {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM `{$tableName}` WHERE id = :id"; //:id - плэйсхолдер для id в целях безопасности
-        return Db::getInstanse()->queryOneObject($sql, ['id' => $id], $this->getEntityClass());
+        return App::call()->db->queryOneObject($sql, ['id' => $id], $this->getEntityClass());
         
     }
 
@@ -41,14 +42,14 @@ abstract class Repository
     {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM `{$tableName}` WHERE `{$name}` = :value";
-        return Db::getInstanse()->queryOneObject($sql, ['value' => $value], $this->getEntityClass());
+        return App::call()->db->queryOneObject($sql, ['value' => $value], $this->getEntityClass());
     }
 
     public function getCountWhere($name, $value) 
     {
         $tableName = $this->getTableName();
         $sql = "SELECT COUNT(*) as count FROM `{$tableName}` WHERE `{$name}` = :value";
-        return Db::getInstanse()->queryOne($sql, ['value' => $value])['count'];
+        return App::call()->db->queryOne($sql, ['value' => $value])['count'];
     }
 
 
@@ -56,7 +57,7 @@ abstract class Repository
     {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM `{$tableName}` LIMIT ?";
-        return Db::getInstanse()->queryLimit($sql, $limit);
+        return App::call()->db->queryLimit($sql, $limit);
     }
 
 
@@ -64,14 +65,14 @@ abstract class Repository
     {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM `{$tableName}`";
-        return Db::getInstanse()->queryAll($sql);
+        return App::call()->db->queryAll($sql);
     }
 
     public function getWhere($name, $value)
     {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM `{$tableName}` WHERE `{$name}` = :value";
-        return Db::getInstanse()->queryAll($sql, ['value' => $value]);
+        return App::call()->db->queryAll($sql, ['value' => $value]);
     }
 
     // ДЗ
@@ -91,8 +92,8 @@ abstract class Repository
         $tableName = $this->getTableName();
         $sql = "INSERT INTO `{$tableName}` ({$fieldStr}) VALUES ({$paramsStr})";
 
-        Db::getInstanse()->execute($sql, $params);
-        $entity->id = Db::getInstanse()->lastInsertId();
+        App::call()->db->execute($sql, $params);
+        $entity->id = App::call()->db->lastInsertId();
     }
 
     public function delete(Entity $entity) 
@@ -100,7 +101,7 @@ abstract class Repository
         $tableName = $this->getTableName();
         $id = $entity->id;
         $sql = "DELETE FROM `{$tableName}` WHERE `{$tableName}`.`id` = :id";
-        Db::getInstanse()->execute($sql, ['id' => $id]);
+        App::call()->db->execute($sql, ['id' => $id]);
         return true;
     }
 
@@ -119,7 +120,7 @@ abstract class Repository
         $fieldStr = implode(',', $fields);  
         $tableName = $this->getTableName();
         $sql = "UPDATE `{$tableName}` SET {$fieldStr} WHERE `{$tableName}`.`id` = :id";
-        Db::getInstanse()->execute($sql, $params);
+        App::call()->db->execute($sql, $params);
         return $this;
     }
     public function save(Entity $entity)

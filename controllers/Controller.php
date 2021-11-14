@@ -4,8 +4,7 @@ namespace app\controllers;
 
 
 use app\interfaces\IRenderer;
-use app\models\repositories\BasketRepository;
-use app\models\repositories\UserRepository;
+use app\engine\App;
 
 
 abstract class Controller {
@@ -35,14 +34,11 @@ abstract class Controller {
     {
         if($this->useLayout){
 
-            $userRepository = new UserRepository();
-            $basketRepository = new BasketRepository();
-
             return $this->renderTemplate('layouts/'.$this->layout, [
                 'header' => $this->renderTemplate('header', [
-                    'isAuth' => $userRepository->isAuth(),
-                    'userName' => $userRepository->getName(),
-                    'count' => $basketRepository->getCountWhere('session_id', session_id()),
+                    'isAuth' => App::call()->userRepository->isAuth(),
+                    'userName' => App::call()->userRepository->getName(),
+                    'count' => App::call()->basketRepository->getCountWhere('session_id', session_id()),
                 ]),
                 'menu' => $this->renderTemplate('menu', ['position'=>$this->action]),
                 'content' => $this->renderTemplate($template, $params),

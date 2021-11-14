@@ -2,12 +2,10 @@
 
 namespace app\controllers;
 
-use app\engine\Request;
+
 use app\models\entity\Orders;
-use app\models\repositories\OrdersRepository;
-use app\models\repositories\BasketRepository;
-use app\models\repositories\ProductRepository;
-use app\models\repositories\UserRepository;
+
+use app\engine\App;
 
 class OrdersController extends Controller 
 {
@@ -18,16 +16,16 @@ class OrdersController extends Controller
     }
     public function actionOrders()
     {
-        $userRepository = new UserRepository();
-        $isAdmin = $userRepository->isAdmin();
-        $isAuth = $userRepository->isAuth();
-        $userId = $userRepository->getId('login', $_SESSION['login']);
+        
+        $isAdmin = App::call()->userRepository->isAdmin();
+        $isAuth = App::call()->userRepository->isAuth();
+        $userId = App::call()->userRepository->getId('login', $_SESSION['login']);
 
         if($isAuth){
             if($isAdmin) {
-                $orders = (new OrdersRepository())->getAll();
+                $orders = App::call()->ordersRepository->getAll();
             } else {
-                $orders = (new OrdersRepository())->getWhere('user_id', $userId);
+                $orders = App::call()->ordersRepository->getWhere('user_id', $userId);
             }
             echo $this->render('orders/orders', ['orders' => $orders, 'isAdmin' => $isAdmin]);
         } else {// else здесь можно направить на страницу авторизации/регистрации
@@ -37,17 +35,17 @@ class OrdersController extends Controller
      public function actionOrder()
     {
         $id = $_GET['id'];
-        $order = (new OrdersRepository())->getOneObject($id);
+        $order = App::call()->ordersRepository->getOneObject($id);
         echo $this->render('orders/order', ['order' => $order]);
     }
 
     public function actionAddOrder()
     {
-        $request = new Request();                   // создаем экземпляр запроса
-        $id=$request->getParams()['id'];            // вытаскиваем из запроса id
-        $userAuth = (new UserRepository())->isAuth(); // проверяем авторизован ли пользователь
-        $basket = (new BasketRepository())->getOne($id); //Получаем текущую запись в корзине
-        $product = (new ProductRepository())->getOne($basket['product_id']);  // и информацию о заказываемом продукте
+        
+        $id=App::call()->request->getParams()['id'];            // вытаскиваем из запроса id
+        $userAuth = App::call()->userRepository->isAuth(); // проверяем авторизован ли пользователь
+        $basket = App::call()->basketRepository->getOne($id); //Получаем текущую запись в корзине
+        $product = App::call()->productRepository->getOne($basket['product_id']);  // и информацию о заказываемом продукте
         
         if($userAuth) {   // Проверяем, авторизован ли пользователь. Если нет, то доступа к заказу не будет 
             $response = [
@@ -67,27 +65,27 @@ class OrdersController extends Controller
 
     public function actionAcceptOrder()
     {
-        $request = new Request();
-        $basket_id = $request->getParams()['id'];
-        $basket = (new BasketRepository())->getOneObject($basket_id);
+        
+        $basket_id = App::call()->request->getParams()['id'];
+        $basket = App::call()->basketRepository->getOneObject($basket_id);
 
-        $product = (new ProductRepository())->getOne($basket->product_id);
-        $user = (new UserRepository())->getName();
-        $user_id = (new UserRepository())->getOneWhere('login', $user)->id;
+        $product = App::call()->productRepository->getOne($basket->product_id);
+        $user = App::call()->userRepository->getName();
+        $user_id = App::call()->userRepository->getOneWhere('login', $user)->id;
 
-        $phone = $request->getParams()['phone']; 
+        $phone = App::call()->request->getParams()['phone']; 
         $name = $product['name'];
         $session = session_id();
         $sum = $basket->price;
         $order = new Orders($name, $phone, $user_id, $session, $sum, "Оформлен");
 
 
-        (new OrdersRepository())->save($order);
-        (new BasketRepository())->delete($basket);
+        App::call()->ordersRepository->save($order);
+        App::call()->basketRepository->delete($basket);
         $response = [
             'status' => 'ok',
             'accepted' => true,
-            'count' => (new BasketRepository())->getCountWhere('session_id', $session)
+            'count' => App::call()->basketRepository->getCountWhere('session_id', $session)
         ];
         echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         die();
@@ -95,10 +93,10 @@ class OrdersController extends Controller
 
     public function actionChange()
     {
-        $request = new Request();
-        $orderId = $request->getParams()['id'];
-        $changeType = $request->getParams()['changeType'];
-        $order = (new OrdersRepository())->getOneWhere('id', $orderId);
+        
+        $orderId = App::call()->request->getParams()['id'];
+        $changeType = App::call()->request->getParams()['changeType'];
+        $order = App::call()->ordersRepository->getOneWhere('id', $orderId);
         if($changeType == 'confirm'){
             $order->status = 'Подтвержден';
         } else if($changeType == 'cancel'){
@@ -107,7 +105,7 @@ class OrdersController extends Controller
         $response = [
             'status' => $order->status
         ];
-        (new OrdersRepository())->save($order);
+        App::call()->ordersRepository->save($order);
         echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         die();
     }
