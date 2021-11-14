@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3307
--- Время создания: Ноя 14 2021 г., 00:00
+-- Время создания: Ноя 14 2021 г., 16:06
 -- Версия сервера: 8.0.24
 -- Версия PHP: 7.4.21
 
@@ -53,7 +53,16 @@ INSERT INTO `basket` (`id`, `session_id`, `product_id`, `price`) VALUES
 (58, '4j23dbtgeo8d47qvu6clu59998qe2c3v', 3, 9990),
 (59, '4j23dbtgeo8d47qvu6clu59998qe2c3v', 3, 9990),
 (64, 'onai0keg2hamsgla3bdnoc5t6fviuv60', 4, 29650),
-(66, '7c338539d0eeqvvus83vsc2hv9dh3519', 2, 35990);
+(66, '7c338539d0eeqvvus83vsc2hv9dh3519', 2, 35990),
+(71, 'o1slde41o4802elg89qtionlp1gk8980', 2, 35990),
+(72, 'o1slde41o4802elg89qtionlp1gk8980', 4, 29650),
+(73, '6fl2tuf7kgue116jlsl0l41jfk58hq27', 2, 35990),
+(74, '6fl2tuf7kgue116jlsl0l41jfk58hq27', 4, 29650),
+(75, 'e0k7acvf9cp7halfclrj4n1bi7mr72ds', 2, 35990),
+(76, 'e0k7acvf9cp7halfclrj4n1bi7mr72ds', 4, 29650),
+(77, 'e0k7acvf9cp7halfclrj4n1bi7mr72ds', 14, 86000),
+(78, 'hgo7ecq9vrs4da8lqn3582gevaj3aaf7', 14, 86000),
+(79, 'hgo7ecq9vrs4da8lqn3582gevaj3aaf7', 15, 13700);
 
 -- --------------------------------------------------------
 
@@ -105,7 +114,7 @@ CREATE TABLE `orders` (
   `name` varchar(256) NOT NULL,
   `phone` varchar(256) NOT NULL,
   `user_id` int NOT NULL,
-  `status` int NOT NULL,
+  `status` varchar(256) NOT NULL,
   `sum` int NOT NULL,
   `session_id` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -115,19 +124,11 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `name`, `phone`, `user_id`, `status`, `sum`, `session_id`) VALUES
-(1, 'Заказ 1', '911-123-56-79', 1, 1, 19000, '1'),
-(2, 'Заказ 2', '911-987-65-32', 1, 2, 12000, '2'),
-(3, 'Часы Casio Edifice EFR-526L-1A', '1111111', 1, 1, 9990, '4j23dbtgeo8d47qvu6clu59998qe2c3v'),
-(4, 'Титановые наручные часы Citizen BM8560-11X', '122-122-1221', 1, 1, 29650, 'onai0keg2hamsgla3bdnoc5t6fviuv60'),
-(5, 'Часы Casio G-SHOCK', '222-333-444', 1, 1, 35990, 'onai0keg2hamsgla3bdnoc5t6fviuv60'),
-(6, 'Часы Casio G-SHOCK', '342424', 1, 1, 35990, 'onai0keg2hamsgla3bdnoc5t6fviuv60'),
-(7, 'Часы Casio G-SHOCK', '111-111-111', 1, 1, 35990, 'onai0keg2hamsgla3bdnoc5t6fviuv60'),
-(8, 'Часы Casio Edifice EFR-526L-1A', '111-111-111', 1, 1, 9990, 'onai0keg2hamsgla3bdnoc5t6fviuv60'),
-(9, 'Часы Casio G-SHOCK', '111-111-111', 1, 1, 35990, 'onai0keg2hamsgla3bdnoc5t6fviuv60'),
-(10, 'Титановые наручные часы Citizen BM8560-11X', '111-111-111', 1, 1, 29650, 'onai0keg2hamsgla3bdnoc5t6fviuv60'),
-(11, 'Часы Casio G-SHOCK', '111-111-111', 1, 1, 35990, 'onai0keg2hamsgla3bdnoc5t6fviuv60'),
-(12, 'Часы Casio G-SHOCK', '111-111-111', 2, 1, 35990, '7c338539d0eeqvvus83vsc2hv9dh3519'),
-(13, 'Швейцарские механические наручные часы NORQAIN N1001CY01A', '111-111-333', 2, 1, 286000, '7c338539d0eeqvvus83vsc2hv9dh3519');
+(14, 'Часы Casio G-SHOCK', '111-111-111', 1, 'Отменен', 35990, '3d0afihbvbajpvdsqe69cpakal337mm7'),
+(15, 'Наручные часы Citizen AT2480-81X', '111-111-111', 2, 'Подтвержден', 44550, 'a8taptfd8pm82qd65s80qoe0na7nl1vf'),
+(16, 'Титановые наручные часы Boccia Titanium 3753-04 с хронографом', '111-111-111', 2, 'Отменен', 13700, 'a8taptfd8pm82qd65s80qoe0na7nl1vf'),
+(17, 'Швейцарские механические наручные часы NORQAIN NS1200C23C/G1NS/10REC с хронографом', '111-111-111', 2, 'Подтвержден', 339000, 'egjm51u6utivulipivn8jmgqvj4ndgcr'),
+(18, 'Швейцарские механические наручные часы NORQAIN NS1200C23C/G1NS/10REC с хронографом', '111-111-111', 2, 'Отменен', 339000, 'egjm51u6utivulipivn8jmgqvj4ndgcr');
 
 -- --------------------------------------------------------
 
@@ -179,8 +180,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `login`, `pass`, `hash`) VALUES
-(1, 'admin', 'admin', '$2y$10$xJe5EdSBPzRWhKYJXDMHEuT.hzBVrAIcS0XEeUkxwWB5P44FGB2aO', ''),
-(2, 'user1', 'user1', '$2y$10$qb0i/515w3abapOspSAh9u9js0j8GB0qLK7pFvMDbgXAzCR9Z3sxO', '');
+(1, 'admin', 'admin', '$2y$10$xJe5EdSBPzRWhKYJXDMHEuT.hzBVrAIcS0XEeUkxwWB5P44FGB2aO', '1378962311619104a84e1e34.43782736'),
+(2, 'user1', 'user1', '$2y$10$qb0i/515w3abapOspSAh9u9js0j8GB0qLK7pFvMDbgXAzCR9Z3sxO', '18037546836191086a931448.87002776');
 
 -- --------------------------------------------------------
 
@@ -247,7 +248,7 @@ ALTER TABLE `users_orders`
 -- AUTO_INCREMENT для таблицы `basket`
 --
 ALTER TABLE `basket`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT для таблицы `brand`
@@ -265,7 +266,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT для таблицы `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT для таблицы `products`
